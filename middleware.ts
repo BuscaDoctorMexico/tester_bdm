@@ -1,30 +1,71 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from 'next/server';
+import { parseCleanUrl } from './utils/url-helpers';
 
 export function middleware(request: NextRequest) {
-  // Get the pathname of the request
-  const path = request.nextUrl.pathname
+  const { pathname } = request.nextUrl;
 
-  // Get the token from the cookies
-  const token = request.cookies.get("session")?.value || ""
+  // --- Lógica de autenticación para rutas /admin/* ---
+  const token = request.cookies.get('session')?.value || '';
+  const isPublicPath = pathname === '/admin/login';
 
-  // Define paths that are considered public (accessible without authentication)
-  const isPublicPath = path === "/admin/login"
-
-  // If user is already authenticated and tries to access login page, redirect to admin page
+  // Si el usuario está autenticado y accede a /admin/login, redirigir a /admin
   if (isPublicPath && token) {
-    return NextResponse.redirect(new URL("/admin", request.url))
+    return NextResponse.redirect(new URL('/admin', request.url));
   }
 
-  // If user is not authenticated and tries to access protected admin routes, redirect to login
-  if (path.startsWith("/admin") && !isPublicPath && !token) {
-    return NextResponse.redirect(new URL("/admin/login", request.url))
+  // Si el usuario no está autenticado y accede a rutas protegidas de /admin, redirigir a /admin/login
+  if (pathname.startsWith('/admin') && !isPublicPath && !token) {
+    return NextResponse.redirect(new URL('/admin/login', request.url));
   }
 
-  return NextResponse.next()
+  // --- Lógica de reescritura de URLs limpias ---
+  const cleanUrlPatterns = [
+    /^\/especialidad\/[^\/]+$/,
+    /^\/especialidad\/[^\/]+\/[^\/]+$/,
+    /^\/ciudad\/[^\/]+$/,
+    /^\/ciudad\/[^\/]+\/[^\/]+$/,
+    /^\/padecimiento\/[^\/]+$/,
+    /^\/padecimiento\/[^\/]+\/[^\/]+$/,
+    /^\/doctor\/[^\/]+$/,
+  ];
+
+  const isCleanUrl = cleanUrlPatterns.some(pattern => pattern.test(pathname));
+
+  if (isCleanUrl) {
+    const parsed = parseCleanUrl(pathname);
+
+    // Redirigir a la estructura interna manteniendo la URL limpia
+    if (parsed.type && parsed.value) {
+      const url = request.nextUrl.clone();
+
+      if (parsed.doctorName) {
+        // Para perfiles de doctor con contexto
+        url.pathname = '/buscar';
+        url.searchParams.set('tipo', parsed.type);
+        url.searchParams.set('valor', parsed.value);
+        url.searchParams.set('doctor', parsed.doctorName);
+      } else {
+        // Para listados de especialidades/ciudades/padecimientos
+        url.pathname = '/buscar';
+        url.searchParams.set('tipo', parsed.type);
+        url.searchParams.set('valor', parsed.value);
+      }
+
+      return NextResponse.rewrite(url);
+    }
+  }
+
+  // Si ninguna regla aplica, continuar con la solicitud
+  return NextResponse.next();
 }
 
-// Configure the middleware to run only on specific paths
+// Configuración del middleware para que se ejecute solo en las rutas especificadas
 export const config = {
-  matcher: ["/admin/:path*"],
-}
+  matcher: [
+    '/admin/:path*',
+    '/especialidad/:path*',
+    '/ciudad/:path*',
+    '/padecimiento/:path*',
+    '/doctor/:path*',
+  ],
+};
