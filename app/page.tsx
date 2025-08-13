@@ -11,6 +11,45 @@ import SearchBar from "@/components/search-bar"
 export const metadata: Metadata = {
   title: "Busca Doctor México | Encuentra médicos de confianza en México",
   description: "Encuentra médicos de confianza por ciudad, especialidad o padecimientos atendidos en México.",
+  alternates: {
+    canonical: 'https://buscadoctormexico.mx'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    title: "Busca Doctor México | Encuentra médicos de confianza",
+    description: "Directorio médico más completo de México. Encuentra especialistas por ciudad, especialidad o padecimiento específico. Más de 80 especialidades médicas.",
+    url: "https://buscadoctormexico.mx",
+    siteName: "Busca Doctor México",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Busca Doctor México - Directorio Médico Completo",
+        type: "image/png"
+      }
+    ],
+    locale: "es_MX",
+    type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Busca Doctor México | Directorio Médico Completo",
+    description: "Encuentra médicos especialistas por ciudad, especialidad o padecimiento en México. Más de 80 especialidades médicas verificadas.",
+    images: ["/twitter-image.png"]
+  }
 }
 
 export default function Home() {
@@ -117,6 +156,78 @@ export default function Home() {
         </div>
 
         <FeaturedSections />
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-4">Preguntas Frecuentes</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Resolvemos las dudas más comunes sobre nuestro directorio médico
+          </p>
+        </div>
+
+        <div className="space-y-4 max-w-3xl mx-auto">
+          <details className="group bg-card rounded-lg p-4 shadow-sm">
+            <summary className="font-medium cursor-pointer list-none flex justify-between items-center">
+              ¿Es gratuito buscar médicos en la plataforma?
+              <span className="group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p className="mt-3 text-muted-foreground">
+              Sí, completamente gratuito. Puedes buscar médicos por ciudad, especialidad o padecimiento sin ningún costo.
+            </p>
+          </details>
+
+          <details className="group bg-card rounded-lg p-4 shadow-sm">
+            <summary className="font-medium cursor-pointer list-none flex justify-between items-center">
+              ¿Los médicos están verificados?
+              <span className="group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p className="mt-3 text-muted-foreground">
+              Sí, verificamos la información de los médicos incluyendo cédulas profesionales y especialidades registradas.
+            </p>
+          </details>
+
+          <details className="group bg-card rounded-lg p-4 shadow-sm">
+            <summary className="font-medium cursor-pointer list-none flex justify-between items-center">
+              ¿Cómo busco un doctor cerca de mí?
+              <span className="group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p className="mt-3 text-muted-foreground">
+              Usa nuestro buscador seleccionando tu ciudad, luego elige si quieres buscar por especialidad médica o por un padecimiento específico.
+            </p>
+          </details>
+
+          <details className="group bg-card rounded-lg p-4 shadow-sm">
+            <summary className="font-medium cursor-pointer list-none flex justify-between items-center">
+              ¿Puedo agendar citas desde la plataforma?
+              <span className="group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p className="mt-3 text-muted-foreground">
+              No, somos un directorio informativo. Contacta directamente al médico usando los teléfonos proporcionados para agendar tu cita.
+            </p>
+          </details>
+
+          <details className="group bg-card rounded-lg p-4 shadow-sm">
+            <summary className="font-medium cursor-pointer list-none flex justify-between items-center">
+              ¿Qué especialidades médicas incluyen?
+              <span className="group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p className="mt-3 text-muted-foreground">
+              Incluimos más de 80 especialidades médicas desde medicina general hasta subespecialidades pediátricas y quirúrgicas.
+            </p>
+          </details>
+
+          <details className="group bg-card rounded-lg p-4 shadow-sm">
+            <summary className="font-medium cursor-pointer list-none flex justify-between items-center">
+              ¿Cómo actualizo la información de mi consultorio?
+              <span className="group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p className="mt-3 text-muted-foreground">
+              Los médicos pueden contactarnos a través de la página de contacto para actualizar su información profesional y de consultorio.
+            </p>
+          </details>
+        </div>
       </section>
     </MainLayout>
   )
